@@ -90,3 +90,23 @@ class MultiHeadedAttention(nn.Module):
         x = self.output(x)
         return x
         
+class SelfAttention(nn.Module):
+    def __init__(self, d_model, output_size, dropout=0.3):
+        super().__init__()
+        self.query = nn.Linear(d_model, output_size)
+        self.key = nn.Linear(d_model, output_size)
+        self.value = nn.Linear(d_model, output_size)
+        self.dropout = nn.Dropout(dropout)
+        
+    def forward(self, q, k, v, mask=None):
+        bs = q.shape[0]
+        tgt_len = q.shape[1]
+        seq_len = k.shape[1]
+        query = self.query(q)
+        key = self.key(k)
+        value = self.value(v)
+        
+        dim_k = key.size(-1)
+        scores = torch.bmm(query, key.transpose(1,2)) / nq.sqrt(dim_k)
+        
+        
