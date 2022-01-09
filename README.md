@@ -12,3 +12,9 @@ https://twitter.com/abhi1thakur/status/1470406419786698761?t=P4m7ZuswAW4FG99mVFQ
 
 https://pypi.org/project/twitter-scraper/
 
+
+
+Shit posts must be:
+non-toxic
+wholesome
+video games
