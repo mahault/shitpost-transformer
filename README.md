@@ -4,7 +4,7 @@ Transformer \\
 Twitter Scraper \\
 Twitter bot \\
 
-
+Worth looking into Tweepy: https://realpython.com/twitter-bot-python-tweepy/
 
 https://cheapbotsdonequick.com/?fbclid=IwAR1DD534IDpwGaI9D5IpCArzUkg0ezIF6N4b5twffaBLS8Ko1CryWIamXbA
 
