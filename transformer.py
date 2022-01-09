@@ -26,3 +26,18 @@ class Encoder(nn.Module):
         for layer in self.enc_layers:
             output = layer(output, src_mask)
         return output
+    
+class Decoder(nn.Module):
+    def __init__(self, d_model, num_heads, num_decoders):
+        super().__init__()
+        self.dec_layers = nn.ModuleList(
+            [DecoderLayer(d_model, num_heads)for _ in range(num_decoders)],
+        )
+        
+    def forward(self, tgt, enc, tgt_mask, enc_mask):
+        output = tgt
+        for layer in self.dec_layers:
+            output = layer(output, enc, tgt_mask, enc_mask)
+        return output
+    
+    
