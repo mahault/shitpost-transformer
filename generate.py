@@ -16,7 +16,7 @@ parser = argparse.ArgumentParser(description='PyTorch Wikitext-2 Language Model'
 # Model parameters.
 parser.add_argument('--data', type=str, default='./data/wikitext-2',
                     help='location of the data corpus')
-parser.add_argument('--checkpoint', type=str, default='./model.pt',
+parser.add_argument('--checkpoint', type=str, default='./model/model.pt',
                     help='model checkpoint to use')
 parser.add_argument('--outf', type=str, default='generated.txt',
                     help='output file for generated text')
@@ -30,6 +30,10 @@ parser.add_argument('--temperature', type=float, default=1.0,
                     help='temperature - higher will increase diversity')
 parser.add_argument('--log-interval', type=int, default=100,
                     help='reporting interval')
+parser.add_argument('--model', type=str, default='Transformer',
+                    help='type of recurrent net (RNN_TANH, RNN_RELU, LSTM, GRU, Transformer)')
+parser.add_argument('--input', type=str,
+                    help='Input words to give a prompt for the transformer generator')
 args = parser.parse_args()
 
 # Set the random seed manually for reproducibility.
@@ -48,12 +52,18 @@ with open(args.checkpoint, 'rb') as f:
 model.eval()
 
 corpus = data.Corpus(args.data)
+print("corpus", corpus)
 ntokens = len(corpus.dictionary)
 
-is_transformer_model = hasattr(model, 'model_type') and model.model_type == 'Transformer'
+is_transformer_model = args.model
+# is_transformer_model = hasattr(model, 'model_type') and model.model_type == 'Transformer' 
 if not is_transformer_model:
     hidden = model.init_hidden(1)
-input = torch.randint(ntokens, (1, 1), dtype=torch.long).to(device)
+if args.input:
+    input = input
+else:
+    input = torch.randint(ntokens, (1, 1), dtype=torch.long).to(device)
+    print("input", input)
 
 with open(args.outf, 'w') as outf:
     with torch.no_grad():  # no tracking history
@@ -71,8 +81,9 @@ with open(args.outf, 'w') as outf:
                 input.fill_(word_idx)
 
             word = corpus.dictionary.idx2word[word_idx]
-
-            outf.write(word + ('\n' if i % 20 == 19 else ' '))
-
+            try:
+                outf.write(word + ('\n' if i % 20 == 19 else ' '))
+            except:
+                pass
             if i % args.log_interval == 0:
                 print('| Generated {}/{} words'.format(i, args.words))
